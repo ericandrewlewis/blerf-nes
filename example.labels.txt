@@ -11,12 +11,12 @@ al 0081EE .@draw
 al 008227 .push_start
 al 00819D .@loop
 al 0082EF .draw_cursor
-al 00833E .setup_background
+al 00830E .setup_background
 al 00000C .temp_y
 al 00000B .temp_x
 al 00000A .cursor_y
 al 000009 .cursor_x
-al 0083B2 .example_palette
+al 008382 .example_palette
 al 008163 .gamepad_poll
 al 000008 .gamepad
 al 00814C .ppu_update_byte

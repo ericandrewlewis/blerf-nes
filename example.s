@@ -626,38 +626,38 @@ draw_cursor:
 	sec
 	sbc #5 ; Y-5
 	sta oam+(0*4)+0
-	sta oam+(1*4)+0
+	; sta oam+(1*4)+0
 	lda cursor_y
 	clc
-	adc #3 ; Y+3
-	sta oam+(2*4)+0
-	sta oam+(3*4)+0
+	; adc #3 ; Y+3
+	; sta oam+(2*4)+0
+	; sta oam+(3*4)+0
 	; Set which tile from the pattern table to display
 	lda #1
 	sta oam+(0*4)+1
-	sta oam+(1*4)+1
-	sta oam+(2*4)+1
-	sta oam+(3*4)+1
+	; sta oam+(1*4)+1
+	; sta oam+(2*4)+1
+	; sta oam+(3*4)+1
 	; attributes
 	lda #%00000000 ; no flip
 	sta oam+(0*4)+2
-	lda #%01000000 ; horizontal flip
-	sta oam+(1*4)+2
-	lda #%10000000 ; vertical flip
-	sta oam+(2*4)+2
-	lda #%11000000 ; both flip
-	sta oam+(3*4)+2
+	; lda #%01000000 ; horizontal flip
+	; sta oam+(1*4)+2
+	; lda #%10000000 ; vertical flip
+	; sta oam+(2*4)+2
+	; lda #%11000000 ; both flip
+	; sta oam+(3*4)+2
 	; x position
 	lda cursor_x
 	sec
 	sbc #4 ; X-4
 	sta oam+(0*4)+3
-	sta oam+(2*4)+3
-	lda cursor_x
+	; sta oam+(2*4)+3
+	; lda cursor_x
 	clc
-	adc #4 ; X+4
-	sta oam+(1*4)+3
-	sta oam+(3*4)+3
+	; adc #4 ; X+4
+	; sta oam+(1*4)+3
+	; sta oam+(3*4)+3
 	rts
 
 setup_background:
