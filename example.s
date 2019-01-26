@@ -266,7 +266,8 @@ ppu_address_tile:
 	sta $2006 ; low bits of Y + X
 	rts
 
-; ppu_update_tile: can be used with rendering on, sets the tile at X/Y to tile A next time you call ppu_update
+; ppu_update_tile: can be used with rendering on.
+; Sets the tile at X/Y to tile A next time you call ppu_update
 ppu_update_tile:
 	pha ; temporarily store A on stack
 	txa
@@ -379,8 +380,9 @@ temp_x:   .res 1
 temp_y:   .res 1
 
 .segment "CODE"
+; The main program, run after the NES is initialized
 main:
-	; setup
+	; Write the palette to
 	ldx #0
 	:
 		lda example_palette, X
@@ -397,7 +399,7 @@ main:
 	; show the screen
 	jsr draw_cursor
 	jsr ppu_update
-	; main loop
+; The main loop
 @loop:
 	; read gamepad
 	jsr gamepad_poll
@@ -520,6 +522,7 @@ release_start:
 	rts
 
 push_b:
+	;
 	jsr snap_cursor
 	lda cursor_x
 	lsr
@@ -596,19 +599,19 @@ push_a:
 	jsr ppu_update_tile
 	rts
 
-; snap_cursor: snap cursor to nearest tile
+; snap the cursor to nearest tile, which is every 8 pixels.
 snap_cursor:
 	lda cursor_x
 	clc
-	adc #4
-	and #$F8
+	adc #%00000100
+	and #%11111000
 	sta cursor_x
 	lda cursor_y
 	clc
-	adc #4
-	and #$F8
+	adc #%00000100
+	and #%11111000
 	sta cursor_y
-	; Y wraps at 240
+	; Y wraps at 240 pixels
 	cmp #240
 	bcc :+
 		lda #0
@@ -629,7 +632,7 @@ draw_cursor:
 	adc #3 ; Y+3
 	sta oam+(2*4)+0
 	sta oam+(3*4)+0
-	; tile
+	; Set which tile from the pattern table to display
 	lda #1
 	sta oam+(0*4)+1
 	sta oam+(1*4)+1
