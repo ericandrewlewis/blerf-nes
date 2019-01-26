@@ -368,7 +368,7 @@ example_palette:
 .byte $0F,$09,$19,$29 ; bg1 green
 .byte $0F,$01,$11,$21 ; bg2 blue
 .byte $0F,$00,$10,$30 ; bg3 greyscale
-.byte $0F,$18,$28,$38 ; sp0 yellow
+.byte $0F,$27,$37,$3E ; sp0 yellow
 .byte $0F,$14,$24,$34 ; sp1 purple
 .byte $0F,$1B,$2B,$3B ; sp2 teal
 .byte $0F,$12,$22,$32 ; sp3 marine
@@ -696,11 +696,12 @@ setup_background:
 		ldx #8
 		:
 			sta $2007
-			eor #$3
+			; commented this out to turn off checkerboard
+			; eor #$3
 			inx
 			cpx #(32-8)
 			bcc :-
-		eor #$3
+		; commented this out to turn off checkerboard
 		iny
 		cpy #(30-8)
 		bcc :--
