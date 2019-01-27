@@ -378,6 +378,9 @@ cursor_x: .res 1
 cursor_y: .res 1
 temp_x:   .res 1
 temp_y:   .res 1
+moving:   .res 1
+dest_y:   .res 1
+debug:    .res 1
 
 .segment "CODE"
 ; The main program, run after the NES is initialized
@@ -396,6 +399,9 @@ main:
 	sta cursor_x
 	lda #120
 	sta cursor_y
+	; Set the character to not moving
+	lda #0
+	sta moving
 	; show the screen
 	jsr draw_cursor
 	jsr ppu_update
@@ -403,6 +409,22 @@ main:
 @loop:
 	; read gamepad
 	jsr gamepad_poll
+
+
+	; If Blerf is moving to a new place, move them one pixel.
+	lda moving
+	beq :++
+		dec cursor_y
+		lda dest_y
+		sec
+		sbc cursor_y
+		cmp #0
+		bne :+
+			lda #0
+			sta moving
+		:
+	:
+
 	; respond to gamepad state
 	lda gamepad
 	and #PAD_START
@@ -454,20 +476,27 @@ main:
 	jmp @loop
 
 push_u:
-	dec cursor_y
-	; Y wraps at 240
-	lda cursor_y
-	cmp #240
-	bcc :+
-		lda #239
-		sta cursor_y
+	; when the up button is pressed, mark that the character is moving
+	; and set their destination y
+	lda $01
+	sta debug
+	lda moving
+	cmp #0
+	bne :+
+		lda #1
+		sta moving
+		lda cursor_y
+		sec
+		sbc #16
+		sta dest_y
 	:
 	rts
 
 push_d:
-	inc cursor_y
-	; Y wraps at 240
+	; Decrease y by 8 pixels
 	lda cursor_y
+	adc #8
+	sta cursor_y
 	cmp #240
 	bcc :+
 		lda #0
@@ -476,11 +505,15 @@ push_d:
 	rts
 
 push_l:
-	dec cursor_x
+	lda cursor_x
+	sbc #8
+	sta cursor_x
 	rts
 
 push_r:
-	inc cursor_x
+	lda cursor_x
+	adc #8
+	sta cursor_x
 	rts
 
 push_select:
@@ -631,10 +664,10 @@ draw_cursor:
 	clc
 	; adc #3 ; Y+3
 	; sta oam+(2*4)+0
-	; sta oam+(3*4)+0
-	; Set which tile from the pattern table to display
-	lda #1
-	sta oam+(0*4)+1
+; sta oam+(3*4)+0
+; Set which tile from the pattern table to display
+lda #1
+sta oam+(0*4)+1
 	; sta oam+(1*4)+1
 	; sta oam+(2*4)+1
 	; sta oam+(3*4)+1
